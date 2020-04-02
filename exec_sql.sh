@@ -8,13 +8,13 @@
 SQL_PATH="$(pwd)/$1"
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [ ! -f flask_app/.mysql.cfg ]; then
+if [ ! -f flask_app/sql_config.py ]; then
 	read -p "MySQL username: " username
 	read -sp "MySQL password: " password
 	echo ""
-	echo "username=\"$username\";password=\"$password\"" > flask_app/.mysql.cfg
-	chmod 600 flask_app/.mysql.cfg
+	echo "username=\"$username\";password=\"$password\"" > flask_app/sql_config.py
+	chmod 600 flask_app/sql_config.py
 fi
 
-source flask_app/.mysql.cfg
+source flask_app/sql_config.py
 mysql -u"$username" -p"$password" < $SQL_PATH 
