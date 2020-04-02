@@ -1,3 +1,4 @@
+#!/bin/bash
 [ ! $1 ] && >&2 echo "Please provide a .sql file as a parameter" && exit 1
 if [ ! -f .mysql.cfg ]; then
 	read -p "MySQL username: " username
