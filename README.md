@@ -10,9 +10,9 @@ This repository holds the code for a customer support chat application. This app
 - PHPMyAdmin (for administration and testing)
 - Bash Scripting (for automation)
 
-### Description of Tools
+### How we used these Tools
 
-This web app utilizes Python Flask to create a REST API which is called upon by a basic HTML/Bootstrap front end. The Flask API uses a library to make queries back and forth with a MySQL database.
+This web app utilizes Python Flask to create a REST API which is called upon by a basic HTML/Bootstrap front end with forms. The Flask API uses a library to make queries back and forth with a MySQL database. PHPMyAdmin was used to ensure each query was being properly executed. Bash scripts were written to quicky start and refresh the Flask service and to quickly execute SQL queries to refresh the database if any changes were made to the structure. 
 
 ### Why we used these tools
 
