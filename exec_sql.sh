@@ -1,12 +1,9 @@
 #!/bin/bash
 
-[ ! $1 ] && >&2 echo "Please provide a .sql file as a parameter" && exit 1
-
-# In case if this script is being executed from some different directory, 
-# take note of the absolute path of the provided SQL file then cd into 
-# the directory in which this script is held
-SQL_PATH="$(pwd)/$1"
+SQL_PATH=$1
 cd "$(dirname "${BASH_SOURCE[0]}")"
+# Default sql file is create_db_complex, else use the provided value
+[ ! $SQL_PATH ] && SQL_PATH=sql/create_db_complex.sql
 
 if [ ! -f flask_app/sql_config.py ]; then
 	read -p "MySQL username: " username
