@@ -10,4 +10,4 @@
 # JetBrains
 .idea/
 
-*.cfg
+sql_config.py
