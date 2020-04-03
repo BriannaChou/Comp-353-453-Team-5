@@ -6,7 +6,7 @@ class User(db.Model):
 	UserId = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	Name = db.Column(db.String(32))
 	Email = db.Column(db.String(64))
-	PhoneNumber = db.Column(db.Integer)
+	PhoneNumber = db.Column(db.String(16))
 	Password = db.Column(db.String(128))
 
 class Customer(db.Model):
@@ -27,7 +27,7 @@ class ChatSession(db.Model):
 	ChatSessionId = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	CustomerId = db.Column(db.Integer, db.ForeignKey('Customer.UserId'))
 	ServiceRepId = db.Column(db.Integer, db.ForeignKey('ServiceRep.UserId'))
-	Topic = db.Column(db.String(64), db.ForeignKey('ChatTopic.Topic');
+	Topic = db.Column(db.String(64), db.ForeignKey('ChatTopic.Topic'))
 
 class Message(db.Model):
 	MessageId = db.Column(db.Integer, autoincrement=True, primary_key=True)
