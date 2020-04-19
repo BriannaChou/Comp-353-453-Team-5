@@ -3,7 +3,7 @@ CREATE DATABASE ChatApp;
 USE ChatApp;
 
 CREATE TABLE _User (
-	UserId INT NOT NULL AUTO_INCREMENT,
+	id INT NOT NULL AUTO_INCREMENT,
 	Name VARCHAR(32) NOT NULL,
 	Email VARCHAR(64) NOT NULL,
 	PhoneNumber VARCHAR(16),
@@ -12,7 +12,7 @@ CREATE TABLE _User (
 );
 
 CREATE TABLE Customer (
-	UserId INT NOT NULL,
+	id INT NOT NULL,
 	CONSTRAINT Customer_FK FOREIGN KEY (UserId) REFERENCES _User(UserId)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE Department (
 );
 
 CREATE TABLE ServiceRep (
-	UserId INT NOT NULL,
+	id INT NOT NULL,
 	Department VARCHAR(32) NOT NULL,
 	CONSTRAINT ServiceRep_FK1 FOREIGN KEY (UserId) REFERENCES _User(UserId),
 	CONSTRAINT ServiceRep_FK2 FOREIGN KEY (Department) REFERENCES Department(DepartmentName)
