@@ -8,12 +8,12 @@ CREATE TABLE User (
 	Email VARCHAR(64) NOT NULL,
 	PhoneNumber VARCHAR(16),
 	Password CHAR(128) NOT NULL,
-	CONSTRAINT User_PK PRIMARY KEY (UserId)
+	CONSTRAINT User_PK PRIMARY KEY (id)
 );
 
 CREATE TABLE Customer (
 	id INT NOT NULL,
-	CONSTRAINT Customer_FK FOREIGN KEY (UserId) REFERENCES _User(UserId)
+	CONSTRAINT Customer_FK FOREIGN KEY (id) REFERENCES User(id)
 );
 
 CREATE TABLE Department (
@@ -24,7 +24,7 @@ CREATE TABLE Department (
 CREATE TABLE ServiceRep (
 	id INT NOT NULL,
 	Department VARCHAR(32) NOT NULL,
-	CONSTRAINT ServiceRep_FK1 FOREIGN KEY (UserId) REFERENCES _User(UserId),
+	CONSTRAINT ServiceRep_FK1 FOREIGN KEY (id) REFERENCES User(id),
 	CONSTRAINT ServiceRep_FK2 FOREIGN KEY (Department) REFERENCES Department(DepartmentName)
 );
 
@@ -41,8 +41,8 @@ CREATE TABLE ChatSession (
 	ServiceRepId INT NOT NULL,
 	Topic VARCHAR(64),
 	CONSTRAINT ChatSession_PK PRIMARY KEY (ChatSessionId),
-	CONSTRAINT ChatSession_FK1 FOREIGN KEY (CustomerId) REFERENCES Customer(UserId),
-	CONSTRAINT ChatSession_FK2 FOREIGN KEY (ServiceRepId) REFERENCES ServiceRep(UserId),
+	CONSTRAINT ChatSession_FK1 FOREIGN KEY (CustomerId) REFERENCES Customer(id),
+	CONSTRAINT ChatSession_FK2 FOREIGN KEY (ServiceRepId) REFERENCES ServiceRep(id),
 	CONSTRAINT ChatSession_FK3 FOREIGN KEY (Topic) REFERENCES ChatTopic(Topic)
 );
 
@@ -54,5 +54,5 @@ CREATE TABLE Message (
 	Message VARCHAR(512),
 	CONSTRAINT Message_PK PRIMARY KEY (MessageId),
 	CONSTRAINT Message_FK1 FOREIGN KEY (ChatSessionId) REFERENCES ChatSession(ChatSessionId),
-	CONSTRAINT Message_FK2 FOREIGN KEY (UserId) REFERENCES _User(UserId)
+	CONSTRAINT Message_FK2 FOREIGN KEY (UserId) REFERENCES User(id)
 );
