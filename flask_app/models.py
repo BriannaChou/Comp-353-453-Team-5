@@ -1,19 +1,17 @@
-from datetime import datetime
-from app import db, login_manager
+from app import db
 from flask_login import UserMixin
 
-@login_manager.user_loader
-def load_user(user_id):
-	return User.query.filter(User.id == int(user_id)).first()
-
-class User(db.Model):
+class User(UserMixin, db.Model):
 	__tablename__ = '_User'
 	__table_args__ = {'extend_existing': True}
-	UserId = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	id = db.Column('UserId', db.Integer, autoincrement=True, primary_key=True)
 	Name = db.Column(db.String(32))
 	Email = db.Column(db.String(64))
 	PhoneNumber = db.Column(db.String(16))
 	Password = db.Column(db.String(128), nullable=False)
+
+	def __repr__(self):
+		return '<User {}>'.format(self.Email)
 
 class Customer(db.Model):
 	__table_args__ = {'extend_existing': True}
