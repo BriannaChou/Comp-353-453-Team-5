@@ -8,14 +8,14 @@ else
 	SQL_PATH="${1}"
 fi
 
-if [ ! -f flask_app/sql_config.py ]; then
+if [ ! -f chat_app/sql_config.py ]; then
 	read -p "MySQL username: " username
 	read -sp "MySQL password: " password
 	echo ""
-	echo "username=\"$username\";password=\"$password\"" > flask_app/sql_config.py
-	chmod 600 flask_app/sql_config.py
+	echo "username=\"$username\";password=\"$password\"" > chat_app/sql_config.py
+	chmod 600 chat_app/sql_config.py
 fi
 
-source flask_app/sql_config.py
+source chat_app/sql_config.py
 mysql -u"$username" -p"$password" < $SQL_PATH 
-[ $? -eq 1 ] && rm flask_app/sql_config.py
+[ $? -eq 1 ] && rm chat_app/sql_config.py
