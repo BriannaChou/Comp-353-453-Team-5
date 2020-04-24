@@ -61,3 +61,14 @@ def logout():
 @login_required
 def account():
 	return render_template('account.html', title='Account')
+
+@app.route("/chatpage")
+@login_required
+def chatpage():
+        if current_user.is_authenticated:
+		return redirect(url_for('chatpage'))
+        form = MessageForm()
+        if form.validate_on_submit():
+                message = Message(MessageID=form.messageID.data)
+        return render_tempate('chatpage.html',title='Chat Page')
+        

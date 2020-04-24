@@ -28,3 +28,8 @@ class LoginForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired(), Length(min=1, max=60)])
 	
 	submit = SubmitField('Login')
+
+class MessageForm(FlaskForm):
+        message = StringField('Message',validators=[DataRequired()])
+        
+        submit = SubmitField('send')

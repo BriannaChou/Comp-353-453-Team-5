@@ -11,7 +11,7 @@ bcrypt = Bcrypt()
 # Flask and SQL setup 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://' + username + ':' + password + '@localhost/ChatApp'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bchou:Longboard5!1234!4321@localhost:9009/ChatApp'
 
 # Initialize plugins
 db.init_app(app)
