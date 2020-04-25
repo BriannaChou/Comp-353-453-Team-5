@@ -8,14 +8,4 @@ else
 	SQL_PATH="${1}"
 fi
 
-if [ ! -f chat_app/sql_config.py ]; then
-	read -p "MySQL username: " username
-	read -sp "MySQL password: " password
-	echo ""
-	echo "username=\"$username\";password=\"$password\"" > chat_app/sql_config.py
-	chmod 600 chat_app/sql_config.py
-fi
-
-source chat_app/sql_config.py
-mysql -u"$username" -p"$password" < $SQL_PATH 
-[ $? -eq 1 ] && rm chat_app/sql_config.py
+mysql -u'CS353_ChatApp' -p'Jpjb!2020' -h 52.87.177.126 < $SQL_PATH 

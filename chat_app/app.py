@@ -4,7 +4,6 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from sql_config import username, password
 
 # Flask and SQL setup 
 app = Flask(__name__)
@@ -18,7 +17,7 @@ connectionString = os.environ.get('SQLALCHEMY_DATABASE_URI')
 if connectionString:
     app.config['SQLALCHEMY_DATABASE_URI'] = connectionString
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://' + username + ':' + password + '@localhost/ChatApp'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://CS353_ChatApp:Jpjb!2020@52.87.177.126/ChatApp'
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
