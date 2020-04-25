@@ -53,5 +53,5 @@ class CustomerRegistrationForm(CustomerProfileForm, PasswordForm):
             raise ValidationError('That email is taken. Please choose a different one.')
 
 
-class StaffRegistrationForm(StaffProfileForm, PasswordForm):
-    pass
+class StaffRegistrationForm(CustomerRegistrationForm):
+    department = SelectField("Department", validators=[DataRequired()])
