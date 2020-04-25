@@ -1,7 +1,6 @@
 USE ChatApp;
 
-INSERT INTO Department VALUES ('Billing');
-INSERT INTO Department VALUES ('Shipping');
+INSERT INTO Department VALUES ('Customer Service');
 INSERT INTO Department VALUES ('Tech Support');
 
 INSERT INTO User (Name, Email, PhoneNumber, Password)

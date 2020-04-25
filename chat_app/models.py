@@ -1,18 +1,7 @@
+from sqlalchemy.orm import relationship
+
 from app import db
 from flask_login import UserMixin
-
-
-class User(UserMixin, db.Model):
-    __tablename__ = 'User'
-    __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    Name = db.Column(db.String(32))
-    Email = db.Column(db.String(64))
-    PhoneNumber = db.Column(db.String(16))
-    Password = db.Column(db.String(128), nullable=False)
-
-    def __repr__(self):
-        return '<User {}>'.format(self.Email)
 
 
 class Customer(db.Model):
@@ -32,6 +21,21 @@ class ServiceRep(db.Model):
     __table_args__ = {'extend_existing': True}
     UserId = db.Column(db.Integer, db.ForeignKey('User.id'), primary_key=True)
     Department = db.Column(db.String(32), db.ForeignKey('Department.DepartmentName'))
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'User'
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    Name = db.Column(db.String(32))
+    Email = db.Column(db.String(64))
+    PhoneNumber = db.Column(db.String(16))
+    Password = db.Column(db.String(128), nullable=False)
+    Customer = relationship(Customer, backref='User', uselist=False)
+    ServiceRep = relationship(ServiceRep, backref='User', uselist=False)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.Email)
 
 
 class ChatTopic(db.Model):
