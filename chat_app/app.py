@@ -45,3 +45,6 @@ if __name__ == '__main__':
 
 db.engine.execute("INSERT IGNORE INTO Department VALUES ('Customer Service');")
 db.engine.execute("INSERT IGNORE INTO Department VALUES ('Tech Support');")
+db.engine.execute("INSERT IGNORE INTO ChatTopic VALUES ('Billing', 'Customer Service');")
+db.engine.execute("INSERT IGNORE INTO ChatTopic VALUES ('Order Status', 'Customer Service');")
+db.engine.execute("INSERT IGNORE INTO ChatTopic VALUES ('Technical Questions', 'Tech Support');")

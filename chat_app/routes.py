@@ -1,15 +1,15 @@
-from flask import render_template, url_for, flash, redirect, request
-from flask_login import login_user, current_user, logout_user, login_required, LoginManager
+from flask import render_template, url_for, flash, redirect, request, abort
+from flask_login import login_user, current_user, logout_user, login_required
 
 from app import app, db, bcrypt, login_manager
 from models import User, Customer, Department, ServiceRep, ChatTopic, ChatSession, Message
 from forms import LoginForm, CustomerRegistrationForm, StaffRegistrationForm, PasswordChangeForm, CustomerProfileForm, \
-    StaffProfileForm
+    StaffProfileForm, CustomerBeginChatForm, ChatForm
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter_by(id=int(user_id)).first()
+    return User.query.get(int(user_id))
 
 
 @app.errorhandler(401)
@@ -20,12 +20,6 @@ def unauthorized(error):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html", title="404"), 404
-
-
-@app.route("/")
-@login_required
-def home():
-    return render_template('home.html', title="Dashboard", user=current_user)
 
 
 @app.route("/register-customer", methods=['GET', 'POST'])
@@ -164,3 +158,44 @@ def password_change():
             flash('Your password has been changed.', 'success')
 
     return render_template('password-change.html', title='Change Password', form=form)
+
+
+@app.route("/", methods=['GET', 'POST'])
+@login_required
+def home():
+    user_id = current_user.get_id()
+    user = User.query.get(user_id)
+    if user.Customer:
+        form = CustomerBeginChatForm()
+        form.chat_topic.choices = [("", "")] + [(row.Topic, row.Topic) for row in
+                                                ChatTopic.query.order_by(ChatTopic.Topic).all()]
+        if form.validate_on_submit():
+            chat_session = ChatSession(CustomerId=user.id, Topic=form.chat_topic.data)
+            db.session.add(chat_session)
+            db.session.commit()
+            return redirect(url_for('chat', id=chat_session.ChatSessionId))
+        return render_template('home-customer.html', title="Begin Chat", form=form, user=current_user)
+    elif user.ServiceRep:
+        return render_template('home-staff.html', title="Begin Chat", user=current_user)
+
+
+@app.route("/chat/<id>", methods=['GET', 'POST'])
+@login_required
+def chat(id):
+    user_id = int(current_user.get_id())
+    user = User.query.get(user_id)
+    chat_session = ChatSession.query.get(id)
+    messages = Message.query.filter_by(ChatSessionId=chat_session.ChatSessionId).order_by(Message.Timestamp)
+    form = ChatForm()
+    if user.Customer:
+        if not chat_session or chat_session.CustomerId != user_id:
+            abort(404)
+        if request.method == 'POST':
+            message = Message(ChatSessionId=chat_session.ChatSessionId, UserId=user_id, Message=form.message.data)
+            db.session.add(message)
+            db.session.commit()
+            return render_template('_messages.html', messages=messages)
+        return render_template('chat-customer.html', title="Chat", form=form, messages=messages, user=current_user)
+    elif user.ServiceRep:
+        # TODO: Add chat functionality for service reps
+        pass

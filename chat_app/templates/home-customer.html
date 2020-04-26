@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<h1 class="text-dark">Welcome, {{ user.Name }}!</h1>
+
+    <div class="content-section">
+		<form method="POST" action="" novalidate>
+			{{ form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4 text-dark">Begin Chat Session</legend>
+
+                <div class="form-group">
+                    {{ form.chat_topic.label(class="form-control-label text-primary") }} <span class="text-warning">*</span>
+                    {% if form.chat_topic.errors %}
+                        {{ form.chat_topic(class_="custom-select is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.chat_topic.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.chat_topic(class_="custom-select") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+
+			<div class="form-group">
+				{{ form.submit(class="btn btn-primary") }}
+			</div>
+		</form>
+	</div>
+{% endblock content %}

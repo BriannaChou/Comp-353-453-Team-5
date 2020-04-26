@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import relationship
 
 from app import db
@@ -60,5 +62,6 @@ class Message(db.Model):
     MessageId = db.Column(db.Integer, autoincrement=True, primary_key=True)
     ChatSessionId = db.Column(db.Integer, db.ForeignKey('ChatSession.ChatSessionId'))
     UserId = db.Column(db.Integer, db.ForeignKey('User.id'))
-    Timestamp = db.Column(db.TIMESTAMP)
+    Timestamp = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
     Message = db.Column(db.String(512))
+    User = relationship(User, backref='Message', uselist=False)
