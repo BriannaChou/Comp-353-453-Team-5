@@ -60,5 +60,5 @@ class Message(db.Model):
     MessageId = db.Column(db.Integer, autoincrement=True, primary_key=True)
     ChatSessionId = db.Column(db.Integer, db.ForeignKey('ChatSession.ChatSessionId'))
     UserId = db.Column(db.Integer, db.ForeignKey('User.id'))
-    Timestamp = db.Column(db.BigInteger)
+    Timestamp = db.Column(db.TIMESTAMP)
     Message = db.Column(db.String(512))
