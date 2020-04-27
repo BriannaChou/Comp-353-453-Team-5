@@ -9,7 +9,7 @@ from flask_login import UserMixin
 class Customer(db.Model):
     __tablename__ = 'Customer'
     __table_args__ = {'extend_existing': True}
-    UserId = db.Column(db.Integer, db.ForeignKey('User.id'), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('User.id'), primary_key=True)
 
 
 class Department(db.Model):
@@ -21,7 +21,7 @@ class Department(db.Model):
 class ServiceRep(db.Model):
     __tablename__ = 'ServiceRep'
     __table_args__ = {'extend_existing': True}
-    UserId = db.Column(db.Integer, db.ForeignKey('User.id'), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('User.id'), primary_key=True)
     Department = db.Column(db.String(32), db.ForeignKey('Department.DepartmentName'))
 
 
@@ -51,8 +51,8 @@ class ChatSession(db.Model):
     __tablename__ = 'ChatSession'
     __table_args__ = {'extend_existing': True}
     ChatSessionId = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    CustomerId = db.Column(db.Integer, db.ForeignKey('Customer.UserId'))
-    ServiceRepId = db.Column(db.Integer, db.ForeignKey('ServiceRep.UserId'))
+    CustomerId = db.Column(db.Integer, db.ForeignKey('Customer.id'))
+    ServiceRepId = db.Column(db.Integer, db.ForeignKey('ServiceRep.id'))
     Topic = db.Column(db.String(64), db.ForeignKey('ChatTopic.Topic'))
 
 
