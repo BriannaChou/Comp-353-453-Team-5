@@ -56,3 +56,11 @@ CREATE TABLE Message (
 	CONSTRAINT Message_FK1 FOREIGN KEY (ChatSessionId) REFERENCES ChatSession(ChatSessionId),
 	CONSTRAINT Message_FK2 FOREIGN KEY (UserId) REFERENCES User(id)
 );
+
+CREATE TABLE Request (
+	CustomerId INT NOT NULL,
+	Topic VARCHAR(64) NOT NULL,
+	Accepted BOOLEAN NOT NULL DEFAULT false,
+	CONSTRAINT Request_FK1 FOREIGN KEY (CustomerId) REFERENCES Customer(id),
+	CONSTRAINT Request_FK2 FOREIGN KEY (Topic) REFERENCES ChatTopic(Topic)
+);
