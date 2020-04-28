@@ -178,9 +178,10 @@ def home():
 			flash('A service representative will assist you shortly...', 'success')
 			return redirect(url_for('home'))
 		else:
-			requests = ChatRequest.query.filter_by(CustomerId=user.id).all()
+			requests = ChatRequest.query.filter_by(CustomerId=user.id, Accepted=False).all()
+			open_chats = ChatSession.query.filter_by(CustomerId=user.id).all()
 			return render_template('home-customer.html', title="Begin Chat", 
-				form=form, user=current_user, requests=requests)
+				form=form, user=current_user, requests=requests, open_chats=open_chats)
 	elif user.ServiceRep:
 		chats = ChatSession.query.filter_by(ServiceRepId=user.id).all()
 
