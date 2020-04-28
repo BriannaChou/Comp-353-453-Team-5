@@ -5,10 +5,11 @@ from models import User
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(), Length(min=6, max=320)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=1, max=60)])
-    submit = SubmitField('Log in')
-
+	email = StringField('Email', validators=[DataRequired(), Email(), Length(min=6, max=320)])
+	
+	password = PasswordField('Password', validators=[DataRequired(), Length(min=1, max=60)])
+	
+	submit = SubmitField('Login')
 
 class PasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
