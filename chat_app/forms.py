@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, TextAreaField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from models import User
 
@@ -57,3 +57,10 @@ class CustomerBeginChatForm(FlaskForm):
 class ChatForm(FlaskForm):
     message = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send')
+
+class RequestForm(FlaskForm):
+	requests = RadioField(validators=[DataRequired()])
+	submit = SubmitField('Accept')
+	
+	def set_choices(self, choices):
+		self.requests.choices = choices
