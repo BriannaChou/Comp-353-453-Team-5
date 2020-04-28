@@ -50,7 +50,7 @@ class ChatTopic(db.Model):
 class ChatSession(db.Model):
     __tablename__ = 'ChatSession'
     __table_args__ = {'extend_existing': True}
-    ChatSessionId = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     CustomerId = db.Column(db.Integer, db.ForeignKey('Customer.id'))
     ServiceRepId = db.Column(db.Integer, db.ForeignKey('ServiceRep.id'))
     Topic = db.Column(db.String(64), db.ForeignKey('ChatTopic.Topic'))
@@ -60,8 +60,17 @@ class Message(db.Model):
     __tablename__ = 'Message'
     __table_args__ = {'extend_existing': True}
     MessageId = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    ChatSessionId = db.Column(db.Integer, db.ForeignKey('ChatSession.ChatSessionId'))
+    ChatSessionId = db.Column(db.Integer, db.ForeignKey('ChatSession.id'))
     UserId = db.Column(db.Integer, db.ForeignKey('User.id'))
-    Timestamp = db.Column(db.TIMESTAMP, default=datetime.utcnow, nullable=False)
+    Timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     Message = db.Column(db.String(512))
     User = relationship(User, backref='Message', uselist=False)
+
+class ChatRequest(db.Model):
+	__tablename__ = 'ChatRequest'
+	__table_args__ = {'extend_existing': True}
+	id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	CustomerId = db.Column(db.Integer, db.ForeignKey('Customer.id'), nullable=False)
+	Topic = db.Column(db.String(64), db.ForeignKey('ChatTopic.Topic'), nullable=False)
+	Accepted = db.Column(db.Boolean)
+	Customer = relationship(Customer, backref='Request', uselist=False)

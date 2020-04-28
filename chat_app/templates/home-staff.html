@@ -1,1 +1,40 @@
-<!- TODO: Create home page for service reps -->
+{% extends "layout.html" %}
+
+{% block content %}
+	<h1 class="text-dark">Welcome, {{ user.Name }}!</h1>
+
+	<div class="content-section">
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4 text-dark">Open Chat Sessions</legend>
+				<div>
+					{% if chats %}
+						{% for chat in chats %}
+							<a href="{{url_for('chat', id=chat.id)}}">
+								{{ chat.Topic }}: Customer {{ chat.CustomerId }}
+							</a>
+						{% endfor %}
+					{% else %}
+						You have no open chat sessions
+					{% endif %}
+				</div>
+			</fieldset>
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4 text-dark">Chat Requests</legend>
+				{% if form %}
+				<form action='{{ url_for('chat_request') }}' method='POST'>
+					{{ form.hidden_tag() }}
+					{% for req in form.requests %}
+						<div>
+							{{ req }}
+							{{ req.label(class="form-control-label text-primary") }}
+						</div>
+					{% endfor %}
+					{{ form.submit(class="btn btn-primary") }}
+				</form>
+				{% else %}
+					You have no current request
+				{% endif %}
+			</fieldset>
+
+	</div>
+{% endblock content %}
