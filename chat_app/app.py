@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
@@ -9,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bchou:Longboard5!1234!4321@localhost:9010/ChatApp'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://CS353_ChatApp:Jpjb!2020@52.87.177.126/ChatApp'
 
 # Either set the connection string as an environment variable or set credentials in the sql_config.py file
 # Example:

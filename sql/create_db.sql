@@ -36,11 +36,11 @@ CREATE TABLE ChatTopic (
 );
 
 CREATE TABLE ChatSession (
-	ChatSessionId INT NOT NULL AUTO_INCREMENT,
+	id INT NOT NULL AUTO_INCREMENT,
 	CustomerId INT NOT NULL,
 	ServiceRepId INT NOT NULL,
 	Topic VARCHAR(64),
-	CONSTRAINT ChatSession_PK PRIMARY KEY (ChatSessionId),
+	CONSTRAINT ChatSession_PK PRIMARY KEY (id),
 	CONSTRAINT ChatSession_FK1 FOREIGN KEY (CustomerId) REFERENCES Customer(id),
 	CONSTRAINT ChatSession_FK2 FOREIGN KEY (ServiceRepId) REFERENCES ServiceRep(id),
 	CONSTRAINT ChatSession_FK3 FOREIGN KEY (Topic) REFERENCES ChatTopic(Topic)
@@ -50,9 +50,19 @@ CREATE TABLE Message (
 	MessageId INT NOT NULL AUTO_INCREMENT,
 	ChatSessionId INT NOT NULL,
 	UserId INT NOT NULL,
-	Timestamp BIGINT,
+	Timestamp DateTime NOT NULL,
 	Message VARCHAR(512),
 	CONSTRAINT Message_PK PRIMARY KEY (MessageId),
-	CONSTRAINT Message_FK1 FOREIGN KEY (ChatSessionId) REFERENCES ChatSession(ChatSessionId),
+	CONSTRAINT Message_FK1 FOREIGN KEY (ChatSessionId) REFERENCES ChatSession(id),
 	CONSTRAINT Message_FK2 FOREIGN KEY (UserId) REFERENCES User(id)
+);
+
+CREATE TABLE ChatRequest (
+	id INT NOT NULL AUTO_INCREMENT,
+	CustomerId INT NOT NULL,
+	Topic VARCHAR(64) NOT NULL,
+	Accepted BOOLEAN DEFAULT false,
+	CONSTRAINT Request_PK PRIMARY KEY (id),
+	CONSTRAINT Request_FK1 FOREIGN KEY (CustomerId) REFERENCES Customer(id),
+	CONSTRAINT Request_FK2 FOREIGN KEY (Topic) REFERENCES ChatTopic(Topic)
 );
