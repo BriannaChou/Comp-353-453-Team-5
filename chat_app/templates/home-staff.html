@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+	<h1 class="text-dark">Welcome, {{ user.Name }}!</h1>
+    <h2>Sessions Open:</h2>
+    <br>
+    {% for row in allSessions %}
+        <article class="media content-section">
+                <span>{{ row.Topic }}</span>&nbsp;
+        </article>
+     {% endfor %}
+{% endblock content %}
