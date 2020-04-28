@@ -28,18 +28,40 @@
 				{{ form.submit(class="btn btn-primary") }}
 			</div>
 		</form>
+
+		{% if requests %}
+		<script type='text/javascript'>
+			setInterval(()=>{
+				var xhr = new XMLHttpRequest()
+				{% for req in requests %}
+					console.log('Checking if request {{ req.id  }} is ready')
+				{% endfor %}
+				xhr.open("GET", "{{ req_url }}")
+				xhr.onload = function(){
+					if(xhr.status == 200){
+						console.log("LOCATION: " + JSON.parse(xhr.response).url)
+						window.location.href = JSON.parse(xhr.response).url
+					}
+					else location.reload()
+				}
+				xhr.send()
+			}, 2500)
+		</script>
+		{% endif %}
+
 		<fieldset class='form-group'>
-		<legend class="border-bottom mb-4 text-dark">Pending Chat Requests</legend>
-		{% for req in requests %}
-			<div>Request #{{ req.id }}: {{ req.Topic}}</div>
-		{% endfor %}
+			<legend class="border-bottom mb-4 text-dark">Pending Chat Requests</legend>
+			{% for req in requests %}
+				<div>Request #{{ req.id }}: {{ req.Topic}}</div>
+			{% endfor %}
 		</fieldset>
 
 		<fieldset class='form-group'>
-		<legend class="border-bottom mb-4 text-dark">Open Chat Sessions</legend>
-		{% for chat in open_chats %}
-			<a href='{{ url_for('chat', id=chat.id) }}'>Chat #{{ chat.id }}: {{ chat.Topic }}</a>
-		{% endfor %}
+			<legend class="border-bottom mb-4 text-dark">Open Chat Sessions</legend>
+			{% for chat in open_chats %}
+				<a href='{{ url_for('chat', id=chat.id) }}'>Chat ID#{{ chat.id }}: {{ chat.Topic }}</a>
+				<br/>
+			{% endfor %}
 		</fieldset>
 	</div>
 {% endblock content %}
