@@ -11,7 +11,6 @@
 						{% for chat in chats %}
 							<a href="{{url_for('chat', id=chat.id)}}">
 								{{ chat.Topic }}: Customer {{ chat.CustomerId }}
-								<br>
 							</a>
 						{% endfor %}
 					{% else %}

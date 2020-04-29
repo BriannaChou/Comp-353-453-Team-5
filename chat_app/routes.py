@@ -1,5 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
+import json
 
 from app import app, db, bcrypt, login_manager
 from models import User, Customer, Department, ServiceRep, ChatTopic, ChatSession, Message, ChatRequest
@@ -167,24 +168,32 @@ def home():
 	user = User.query.get(user_id)
 	if user.Customer:
 		form = CustomerBeginChatForm()
-		form.chat_topic.choices = [("", "")] + [(row.Topic, row.Topic) for row in ChatTopic.query.order_by(ChatTopic.Topic).all()]
+		form.chat_topic.choices = [("", "")] + [(row.Topic, row.Topic) for row in
+												ChatTopic.query.order_by(ChatTopic.Topic).all()]
 		if form.validate_on_submit():
 			# Find the service rep under the specified topic with the least number of open chat sessions
 			dept = ChatTopic.query.filter_by(Topic=form.chat_topic.data).first().Department
 			request = ChatRequest(CustomerId=user.id, Topic=form.chat_topic.data, Accepted=False)
 			db.session.add(request)
 			db.session.commit()
-			return redirect(url_for('waitroom'))
+			flash('A service representative will assist you shortly...', 'success')
+			return redirect(url_for('home'))
 		else:
-			requests = ChatRequest.query.filter_by(CustomerId=user.id).all()
-			return render_template('home-customer.html', title="Begin Chat", 
-				form=form, user=current_user, requests=requests)
+			requests = ChatRequest.query.filter_by(CustomerId=user.id, Accepted=False).all()
+			id_list = ', '.join(map(str, [req.id for req in requests]))
+			print(id_list)
+			req_url = url_for('chat_request', _method='GET', ids=id_list)
+			print(req_url)
+			open_chats = ChatSession.query.filter_by(CustomerId=user.id).all()
+			return render_template('home-customer.html', title="Begin Chat",
+				form=form, user=current_user, requests=requests, req_url=req_url, open_chats=open_chats)
 	elif user.ServiceRep:
 		chats = ChatSession.query.filter_by(ServiceRepId=user.id).all()
 
 		# Query the request tableand get all the topics that fall under the current user's department
 		# then get all requests that match those topics
 		reqs = ChatRequest.query \
+			.filter_by(Accepted=False) \
 			.join(User, User.id == ChatRequest.CustomerId) \
 			.add_columns(User.Name) \
 			.join(ChatTopic) \
@@ -202,34 +211,37 @@ def home():
 	else:
 		abort(401)
 
-@app.route("/waitroom", methods=['GET', 'POST'])
-@login_required
-def waitroom():
-        user_id = current_user.get_id()
-        user = User.query.get(user_id)
-        if user.Customer:
-                chats = ChatSession.query.filter_by(CustomerId=user.id).all()
-                for chat in chats:
-                        if chat == None:
-                                return redirect(url_for('waitroom'))
-                        else:
-                                flash('A service representative has entered the chat', 'success')
-                                return redirect(url_for('chat', id=chat.id))
-        return render_template('waiting.html',title='Waiting room')
-                
-@app.route("/request", methods=['POST'])
+@app.route("/request", methods=['GET', 'POST'])
 @login_required
 def chat_request():
 	if current_user.Customer:
-		flash('You do not have access to this resource', 'danger')
-		abort(401)
+		# The js will send a get request with a list of request ids - here, we redirect to any requests that have been accepted
+		if request.method == 'GET':
+			ids = request.args.get('ids').split(', ')
+			print("__________________REQUEST IDS_______________________")
+			print(ids)
+
+			for id in ids:
+				req = ChatRequest.query.get(id);
+				if req and req.Accepted == True:
+					print("REQUEST")
+					print(req.id)
+					print(req.Accepted)
+					# The request has been accepted, now get the chat session and redirect
+					chat_session = req.ChatSession
+					if chat_session:
+						return json.dumps({'url': url_for('chat', id=chat_session.id)}), 200, {'ContentType':'application/json'}
+					else:
+						return json.dumps({'url': url_for('home')}), 200, {'ContentType':'application/json'}
+			# If none of the requests have been accepted, just return a 200 status because nothing has been changed
+			return json.dumps({'success':True}), 204, {'ContentType':'application/json'}
+		else:
+			flash('You do not have access to post to this resource', 'danger')
+			abort(401)
 	elif current_user.ServiceRep:
-		print("SERVICE REP AUTHORIZED")
 		form = RequestForm()
 		if form.validate_on_submit:
-			print("REQUEST DATA IS RIGHT FUCKING HERE")
-			print(form.requests.data)
-			req = ChatRequest.query.filter_by(id=form.requests.data).first()
+			req = ChatRequest.query.get(form.requests.data)
 			if req.Accepted:
 				flash('This request has already been accepted', 'danger')
 				return redirect(url_for('home'))
@@ -237,6 +249,9 @@ def chat_request():
 				req.Accepted = True
 				chat_session = ChatSession(CustomerId=req.CustomerId, ServiceRepId=current_user.id, Topic=req.Topic)
 				db.session.add(chat_session)
+				db.session.commit()
+				chat_session = ChatSession.query.filter_by(CustomerId=req.CustomerId, ServiceRepId=current_user.id, Topic=req.Topic).first()
+				req.ChatSessionId = chat_session.id
 				db.session.commit()
 				return redirect(url_for('chat', id=chat_session.id))
 		else:
@@ -249,8 +264,6 @@ def chat(id):
 	user_id = int(current_user.get_id())
 	user = User.query.get(user_id)
 	chat_session = ChatSession.query.get(id)
-	print("CHAT SESSION_________________________________________________________")
-	print(chat_session)
 	messages = Message.query.filter_by(ChatSessionId=chat_session.id).order_by(Message.Timestamp)
 	form = ChatForm()
 	if user.Customer:
