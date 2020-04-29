@@ -176,17 +176,13 @@ def home():
 			request = ChatRequest(CustomerId=user.id, Topic=form.chat_topic.data, Accepted=False)
 			db.session.add(request)
 			db.session.commit()
-			flash('A service representative will assist you shortly...', 'success')
-			return redirect(url_for('home'))
+			request = ChatRequest.query.filter_by(CustomerId=user.id, Topic=form.chat_topic.data, Accepted=False).first()
+			return redirect(url_for('waiting_room', id=request.id))
 		else:
 			requests = ChatRequest.query.filter_by(CustomerId=user.id, Accepted=False).all()
-			id_list = ', '.join(map(str, [req.id for req in requests]))
-			print(id_list)
-			req_url = url_for('chat_request', _method='GET', ids=id_list)
-			print(req_url)
 			open_chats = ChatSession.query.filter_by(CustomerId=user.id).all()
 			return render_template('home-customer.html', title="Begin Chat",
-				form=form, user=current_user, requests=requests, req_url=req_url, open_chats=open_chats)
+				form=form, user=current_user, requests=requests, open_chats=open_chats)
 	elif user.ServiceRep:
 		chats = ChatSession.query.filter_by(ServiceRepId=user.id).all()
 
@@ -211,33 +207,44 @@ def home():
 	else:
 		abort(401)
 
-@app.route("/request", methods=['GET', 'POST'])
+@app.route("/waiting_room/<id>", methods=['GET'])
+@login_required
+def waiting_room(id):
+	if current_user.Customer:
+		req = ChatRequest.query.get(id)
+		# The js will send a get request with an id - here, we redirect if the request has been accepted
+		if req:
+			on_page = request.args.get('present')
+			if req.Accepted:
+				# The request has been accepted, now get the chat session and redirect
+				chat_session = req.ChatSession
+				if chat_session:
+					return redirect(url_for('chat', id=chat_session.id))
+				else:
+					flash('Something went wrong - your request has been accepted but we cannot find a corresponding chat session', 'danger')
+					# First return a redirect back to this page to try once more - if it fails again, just redirect back home
+					if on_page == 'exit':
+						return redirect(url_for('home'))
+					else:
+						return redirect(url_for('waiting_room', id=id, on_page='exit'))
+			else:
+				if on_page:
+					return render_template('waiting.html', user=current_user, req=req), 304
+				else:
+					return render_template('waiting.html', user=current_user, req=req)
+		else:
+			flash('This waiting room either does not exist or has been closed', 'danger')
+			abort(404)
+	elif current_user.ServiceRep:
+		flash('Only customers have access to this resource', 'danger')
+		return redirect(url_for('home'))
+
+@app.route("/request", methods=['POST'])
 @login_required
 def chat_request():
 	if current_user.Customer:
-		# The js will send a get request with a list of request ids - here, we redirect to any requests that have been accepted
-		if request.method == 'GET':
-			ids = request.args.get('ids').split(', ')
-			print("__________________REQUEST IDS_______________________")
-			print(ids)
-
-			for id in ids:
-				req = ChatRequest.query.get(id);
-				if req and req.Accepted == True:
-					print("REQUEST")
-					print(req.id)
-					print(req.Accepted)
-					# The request has been accepted, now get the chat session and redirect
-					chat_session = req.ChatSession
-					if chat_session:
-						return json.dumps({'url': url_for('chat', id=chat_session.id)}), 200, {'ContentType':'application/json'}
-					else:
-						return json.dumps({'url': url_for('home')}), 200, {'ContentType':'application/json'}
-			# If none of the requests have been accepted, just return a 200 status because nothing has been changed
-			return json.dumps({'success':True}), 204, {'ContentType':'application/json'}
-		else:
-			flash('You do not have access to post to this resource', 'danger')
-			abort(401)
+		flash('You do not have access to post to this resource', 'danger')
+		abort(401)
 	elif current_user.ServiceRep:
 		form = RequestForm()
 		if form.validate_on_submit:
