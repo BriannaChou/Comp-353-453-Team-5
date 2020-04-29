@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, TextAreaField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, TextAreaField, RadioField, HiddenField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from models import User
 
@@ -56,6 +56,7 @@ class CustomerBeginChatForm(FlaskForm):
 
 
 class ChatForm(FlaskForm):
+    session_id = HiddenField()
     message = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send')
 

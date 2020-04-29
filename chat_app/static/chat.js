@@ -1,11 +1,24 @@
 $(function () {
     scrollToBottom();
 
+    if ($("#message").is(":visible") === true) {
+        setInterval(function getMessages() {
+            $.ajax({
+                type: "GET",
+                url: "/messages/" + $("#session_id").val(),
+                dataType: "html"
+            }).done(function(data) {
+                $("#messages").html(data);
+                scrollToBottom();
+            });
+        }, 3000);
+    }
+
     $("#chat-form textarea").keypress(function(e) {
         var $form = $(this).closest("form");
         var $textArea = $(this);
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == '13'){
+        if (keycode === 13){
             $form.submit();
             $textArea.val("");
             return false;
