@@ -273,6 +273,7 @@ def chat(id):
 	chat_session = ChatSession.query.get(id)
 	messages = Message.query.filter_by(ChatSessionId=chat_session.id).order_by(Message.Timestamp)
 	form = ChatForm()
+	form.set_session_id(id)
 	if user.Customer:
 		if not chat_session or chat_session.CustomerId != user_id:
 			abort(404)
