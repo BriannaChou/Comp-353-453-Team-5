@@ -327,8 +327,10 @@ def report():
 	date_format = date.today();
 	current_date = date_format.strftime("%Y-%m-%d %H:%M:%S")
 
-	daily_messages = "SELECT COUNT(MessageId) FROM Message WHERE UserId = " + user_id + " AND Timestamp > " + "current_date"
+	daily_messages = "SELECT COUNT(MessageId) FROM Message WHERE UserId = " + user_id + " AND Timestamp > "  + "current_date" 
 	total_messages = db.engine.execute(daily_messages).scalar()
- 
+	
+	best_sql= "select * from ServiceRep where id = (select sr.id from ChatSession cs join ServiceRep sr on cs.ServiceRepId = sr.id group by sr.id order by count(cs.id) desc limit 1)"
+	best_rep = db.engine.execute(best_sql).scalar()
 
-	return render_template('staff-report.html', title="Service Rep Report", user=current_user, total=total, total_messages=total_messages)
+	return render_template('staff-report.html', title="Service Rep Report", user=current_user, total=total, total_messages=total_messages, best_rep=best_rep)
