@@ -73,4 +73,6 @@ class ChatRequest(db.Model):
 	CustomerId = db.Column(db.Integer, db.ForeignKey('Customer.id'), nullable=False)
 	Topic = db.Column(db.String(64), db.ForeignKey('ChatTopic.Topic'), nullable=False)
 	Accepted = db.Column(db.Boolean)
-	Customer = relationship(Customer, backref='Request', uselist=False)
+	ChatSessionId = db.Column(db.Integer, db.ForeignKey('ChatSession.id'))
+	ChatSession = relationship(ChatSession, backref='ChatRequest', uselist=False)
+	Customer = relationship(Customer, backref='ChatRequest', uselist=False)

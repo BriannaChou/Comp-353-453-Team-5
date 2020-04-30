@@ -10,5 +10,5 @@
 # JetBrains
 .idea/
 
+*pycache*
 */__pycache__/
-sql_config.py

@@ -28,5 +28,20 @@
 				{{ form.submit(class="btn btn-primary") }}
 			</div>
 		</form>
+
+		<fieldset class='form-group'>
+			<legend class="border-bottom mb-4 text-dark">Pending Chat Requests</legend>
+			{% for req in requests %}
+				<div>Request #{{ req.id }}: {{ req.Topic}}</div>
+			{% endfor %}
+		</fieldset>
+
+		<fieldset class='form-group'>
+			<legend class="border-bottom mb-4 text-dark">Open Chat Sessions</legend>
+			{% for chat in open_chats %}
+				<a href='{{ url_for('chat', id=chat.id) }}'>Chat ID#{{ chat.id }}: {{ chat.Topic }}</a>
+				<br/>
+			{% endfor %}
+		</fieldset>
 	</div>
 {% endblock content %}
