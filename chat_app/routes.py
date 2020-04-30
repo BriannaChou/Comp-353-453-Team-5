@@ -233,8 +233,7 @@ def waiting_room(id):
 				else:
 					return render_template('waiting.html', user=current_user, req=req)
 		else:
-			flash('This waiting room either does not exist or has been closed', 'danger')
-			abort(404)
+			return redirect(url_for('home'))
 	elif current_user.ServiceRep:
 		flash('Only customers have access to this resource', 'danger')
 		return redirect(url_for('home'))
@@ -298,3 +297,15 @@ def chat(id):
 def messages(session_id):
     messages = Message.query.filter_by(ChatSessionId=session_id).order_by(Message.Timestamp)
     return render_template('_messages.html', messages=messages)
+
+
+@app.route("/request/<request_id>", methods=['DELETE'])
+@login_required
+def delete_request(request_id):
+	user_id = int(current_user.get_id())
+	request = ChatRequest.query.get(request_id)
+	if not request or request.Customer.id != user_id:
+		abort(404)
+	db.session.delete(request)
+	db.session.commit()
+	return '', 200

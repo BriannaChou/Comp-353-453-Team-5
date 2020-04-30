@@ -18,7 +18,13 @@
 
 		<fieldset class='form-group'>
 			<legend class="border-bottom mb-4 text-dark">Hang tight, a service representative will be right with you</legend>
-			<div>Chat Request #{{ req.id }}: {{ req.Topic}}</div>
+			<div>
+                Chat Request #{{ req.id }}: {{ req.Topic}}
+                <button type="button" class="btn btn-link cancel" value="{{ req.id }}">Cancel Chat Request</button>
+            </div>
 		</fieldset>
-	</div>
 {% endblock content %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='request.js') }}"></script>
+{% endblock scripts %}
