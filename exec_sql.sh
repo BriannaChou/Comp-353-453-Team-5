@@ -3,7 +3,7 @@
 cd "$(dirname "${BASH_SOURCE[0]}")"
 # Default sql file is create_db_complex, else use the provided value
 if [[ -z ${1} || ! -f ${1} ]];then
-	SQL_PATH="./sql/create_db_complex.sql"
+	SQL_PATH="./sql/create_db.sql"
 else
 	SQL_PATH="${1}"
 fi

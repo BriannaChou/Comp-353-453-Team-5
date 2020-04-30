@@ -33,11 +33,20 @@
 				</div>
 			</fieldset>
 			<div class="form-group">
-				{{ form.submit(class="btn btn-outline-info") }}
+				{{ form.submit(class="btn btn-primary") }}
 			</div>
 		</form>
 	</div>
 	<div class="border-top pt-3">
-		Need An Account? <a class="ml-2" href="{{ url_for('register') }}">Sign Up Now</a>
+		Need An Account?
+
+        <ul>
+            <li>
+                <a class="ml-2" href="{{ url_for('register_customer') }}">Customer Registration</a>
+            </li>
+            <li>
+                <a class="ml-2" href="{{ url_for('register_staff') }}">Staff Registration</a>
+            </li>
+        </ul>
 	</div>
 {% endblock content %}
