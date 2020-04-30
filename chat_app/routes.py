@@ -309,3 +309,18 @@ def delete_request(request_id):
 	db.session.delete(request)
 	db.session.commit()
 	return '', 200
+
+@app.route("/report", methods=['GET'])
+@login_required
+def report():
+	user_id = current_user.get_id()
+	user = User.query.get(user_id)
+	if not user.ServiceRep:
+		abort(401)
+
+	# Aggregate function
+	sql_count = "SELECT COUNT(*) FROM ServiceRep WHERE id = " + user_id
+	total = db.engine.execute(sql_count).scalar()
+	# TODO: Write additional queries for questions 8, 11, and 13 using .fetchone() and .fetchall() when appropriate
+
+	return render_template('staff-report.html', title="Service Rep Report", user=current_user, total=total)

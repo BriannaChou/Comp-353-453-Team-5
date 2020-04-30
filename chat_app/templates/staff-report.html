@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="text-dark mb-4">Service Rep Report - {{ user.Name }}</h1>
+
+	<div class="content-section">
+        <table class="table table-bordered table-striped">
+            <tbody>
+            <tr>
+                <td>Total Chat Sessions</td>
+                <td>{{ total }}</td>
+            </tr>
+            </tbody>
+        </table>
+	</div>
+{% endblock content %}
