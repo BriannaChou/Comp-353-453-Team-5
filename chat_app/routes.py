@@ -291,4 +291,9 @@ def chat(id):
 			db.session.commit()
 			return render_template('_messages.html', messages=messages)
 		return render_template('chat-customer.html', title="Chat", form=form, messages=messages, user=current_user)
-			
+
+@app.route("/messages/<session_id>", methods=['GET'])
+@login_required
+def messages(session_id):
+    messages = Message.query.filter_by(ChatSessionId=session_id).order_by(Message.Timestamp)
+    return render_template('_messages.html', messages=messages)

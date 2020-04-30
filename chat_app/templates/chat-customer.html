@@ -10,6 +10,7 @@
     <div class="content-section">
 		<form method="POST" action id="chat-form" novalidate>
 			{{ form.hidden_tag() }}
+            {{ form.session_id }}
 			<fieldset class="form-group">
                 <div class="form-group">
                     {{ form.message.label(class="form-control-label text-primary") }} <span class="text-warning">*</span>
