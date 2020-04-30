@@ -1,0 +1,11 @@
+START TRANSACTION;
+    SET foreign_key_checks = 0;
+    DROP TABLE IF EXISTS ChatSession;
+    DROP TABLE IF EXISTS ChatTopic;
+    DROP TABLE IF EXISTS Customer;
+    DROP TABLE IF EXISTS Department;
+    DROP TABLE IF EXISTS Message;
+    DROP TABLE IF EXISTS ServiceRep;
+    DROP TABLE IF EXISTS User;
+    SET foreign_key_checks = 1;
+    COMMIT;

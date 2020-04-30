@@ -24,20 +24,36 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav w-100">
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-                    </li>
+
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-item nav-link" href="{{ url_for('register_customer') }}">Customer Registration</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-item nav-link" href="{{ url_for('register_staff') }}">Staff Registration</a>
+                    </li>
+                {% endif %}
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown ml-auto d-none d-lg-block">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="profileButton" data-toggle="dropdown">Profile</button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{{ url_for('password_change') }}">Change Password</a>
+                            <a class="dropdown-item" href="{{ url_for('customer_profile') }}">Edit Profile</a>
+                            <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </li>
+                    <li class="nav-item d-none d-sm-block d-md-none">
+                        <a class="nav-item nav-link" href="{{ url_for('password_change') }}">Change Password</a>
+                    </li>
+                    <li class="nav-item d-none d-sm-block d-md-none">
+                        <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="ml-auto">
+                        <a class="nav-item btn btn-outline-primary" href="{{ url_for('login') }}">Log in</a>
                     </li>
                 {% endif %}
             </ul>

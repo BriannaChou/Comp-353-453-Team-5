@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<h1 class="text-dark mb-4">Welcome, {{ user.Name }}!</h1>
+
+    <div class="card overflow-auto mb-4 p-2 small" id="messages" style="height: 300px; background-color: whitesmoke;">
+        {% include '_messages.html' %}
+    </div>
+
+    <div class="content-section">
+		<form method="POST" action id="chat-form" novalidate>
+			{{ form.hidden_tag() }}
+            {{ form.session_id }}
+			<fieldset class="form-group">
+                <div class="form-group">
+                    {{ form.message.label(class="form-control-label text-primary") }} <span class="text-warning">*</span>
+                    {% if form.message.errors %}
+                        {{ form.message(class_="form-control is-invalid", style="height: 100px") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.message.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.message(class_="form-control", style="height: 100px", required="required") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+
+			<div class="form-group">
+				{{ form.submit(class="btn btn-primary") }}
+			</div>
+		</form>
+	</div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+{% endblock scripts %}
