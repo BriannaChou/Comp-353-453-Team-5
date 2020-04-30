@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="content-section">
+		<form method="POST" action="" novalidate>
+			{{ form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4 text-dark">Staff Registration</legend>
+
+				{% include '_register.html' %}
+
+				{% include '_password.html' %}
+
+				<div class="form-group">
+					{{ form.department.label(class="form-control-label text-primary") }} <span class="text-warning">*</span>
+					{% if form.department.errors %}
+						{{ form.department(class_="custom-select is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.department.errors %}
+								<span>{{ error }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.department(class_="custom-select") }}
+					{% endif %}
+				</div>
+
+			</fieldset>
+
+			<div class="form-group">
+				{{ form.submit(class="btn btn-primary") }}
+			</div>
+		</form>
+	</div>
+	<div class="border-top pt-3">
+		Already Have An Account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+	</div>
+{% endblock content %}

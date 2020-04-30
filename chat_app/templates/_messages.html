@@ -1,0 +1,12 @@
+{% for message in messages %}
+    <div class="{% if message.User.Customer %} text-success {% else %} text-danger {% endif %}">
+        <p>
+            <strong>
+                {{ message.User.Name }}
+                {{ message.Timestamp }} (UTC)
+            </strong>
+        </p>
+        <p>{{ message.Message }}</p>
+    </div>
+    <hr />
+{% endfor %}

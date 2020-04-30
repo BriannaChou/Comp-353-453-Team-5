@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<h1 class="text-dark">Welcome, {{ user.Name }}!</h1>
+
+    <div class="content-section">
+		<form method="POST" action="" novalidate>
+			{{ form.hidden_tag() }}
+			<fieldset class="form-group">
+				<legend class="border-bottom mb-4 text-dark">Begin Chat Session</legend>
+
+                <div class="form-group">
+                    {{ form.chat_topic.label(class="form-control-label text-primary") }} <span class="text-warning">*</span>
+                    {% if form.chat_topic.errors %}
+                        {{ form.chat_topic(class_="custom-select is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.chat_topic.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.chat_topic(class_="custom-select") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+
+			<div class="form-group">
+				{{ form.submit(class="btn btn-primary") }}
+			</div>
+		</form>
+
+		<fieldset class='form-group'>
+			<legend class="border-bottom mb-4 text-dark">Pending Chat Requests</legend>
+			{% for req in requests %}
+				<div>Request #{{ req.id }}: {{ req.Topic}}</div>
+			{% endfor %}
+		</fieldset>
+
+		<fieldset class='form-group'>
+			<legend class="border-bottom mb-4 text-dark">Open Chat Sessions</legend>
+			{% for chat in open_chats %}
+				<a href='{{ url_for('chat', id=chat.id) }}'>Chat ID#{{ chat.id }}: {{ chat.Topic }}</a>
+				<br/>
+			{% endfor %}
+		</fieldset>
+	</div>
+{% endblock content %}

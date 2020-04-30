@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+		<script type='text/javascript'>
+			setInterval(()=>{
+				// If the url doesnt have paramters, add one telling the server that we are already on this page
+				// We need it to know that because we will be constantly refreshing - If the server knows that
+				// we are already on this page, it can just send a 'not modified' response if nothing has happened
+				// The first request without this parameter gets this page, the following requests just check to 
+				// see if the chat session has been accepted yet
+				var url = window.location.href;
+				if (url.indexOf('?') < 0){
+				   url += '?present=1'
+				}
+				window.location.href = url;
+			}, 2500)
+		</script>
+
+		<fieldset class='form-group'>
+			<legend class="border-bottom mb-4 text-dark">Hang tight, a service representative will be right with you</legend>
+			<div>
+                Chat Request #{{ req.id }}: {{ req.Topic}}
+                <button type="button" class="btn btn-link cancel" value="{{ req.id }}">Cancel Chat Request</button>
+            </div>
+		</fieldset>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='request.js') }}"></script>
+{% endblock scripts %}
