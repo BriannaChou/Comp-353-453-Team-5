@@ -333,4 +333,7 @@ def report():
 	best_sql= "select * from ServiceRep where id = (select sr.id from ChatSession cs join ServiceRep sr on cs.ServiceRepId = sr.id group by sr.id order by count(cs.id) desc limit 1)"
 	best_rep = db.engine.execute(best_sql).scalar()
 
-	return render_template('staff-report.html', title="Service Rep Report", user=current_user, total=total, total_messages=total_messages, best_rep=best_rep)
+	dept_sql = "SELECT Department FROM ServiceRep WHERE id =" + user_id
+	rep_dept = db.engine.execute(dept_sql).scalar()
+
+	return render_template('staff-report.html', title="Service Rep Report", user=current_user, total=total, total_messages=total_messages, best_rep=best_rep, rep_dept=rep_dept)
