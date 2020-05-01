@@ -320,7 +320,7 @@ def report():
 		abort(401)
 
 	# Aggregate function
-	sql_count = "SELECT COUNT(*) FROM ServiceRep WHERE id = " + user_id
+	sql_count = "SELECT COUNT(*) FROM ChatSession WHERE id = " + user_id
 	total = db.engine.execute(sql_count).scalar()
 	# TODO: Write additional queries for questions 8, 11, and 13 using .fetchone() and .fetchall() when appropriate
 
